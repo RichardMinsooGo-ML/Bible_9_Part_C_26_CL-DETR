@@ -1,8 +1,8 @@
-import argparse
 import datetime
 import json
 import random
 import time
+import argparse
 from pathlib import Path
 import copy
 
@@ -105,7 +105,7 @@ def get_args_parser():
 
     # dataset parameters
     parser.add_argument('--dataset_file', default='coco')
-    parser.add_argument('--coco_path', default='./data/coco', type=str)
+    parser.add_argument('--coco_path', default='./dataset/coco', type=str)
     parser.add_argument('--coco_panoptic_path', type=str)
     parser.add_argument('--remove_difficult', action='store_true')
 
@@ -144,7 +144,8 @@ def main(args):
         assert args.masks, "Frozen training is meant for segmentation only"
     print(args)
 
-    device = torch.device(args.device)
+    # ---------------------------- Build CUDA ----------------------------
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # fix the seed for reproducibility
     seed = args.seed + utils.get_rank()
