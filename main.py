@@ -16,7 +16,7 @@ from datasets import build_dataset, get_coco_api_from_dataset
 from datasets.incremental import generate_cls_order
 from engine import evaluate, train_one_epoch, train_one_epoch_incremental
 from models import build_model
-from tensorboardX import SummaryWriter
+# from tensorboardX import SummaryWriter
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Deformable DETR Detector', add_help=False)
