@@ -69,7 +69,7 @@ def get_args_parser():
                         help="Dropout applied in the transformer")
     parser.add_argument('--nheads', default=8, type=int,
                         help="Number of attention heads inside the transformer's attentions")
-    parser.add_argument('--num_queries', default=300, type=int,
+    parser.add_argument('--num_queries', default=100, type=int,
                         help="Number of query slots")
     parser.add_argument('--dec_n_points', default=4, type=int)
     parser.add_argument('--enc_n_points', default=4, type=int)
@@ -211,7 +211,6 @@ def main(args):
                 sampler_val_old = torch.utils.data.SequentialSampler(dataset_val_old)
                 sampler_val_new = torch.utils.data.SequentialSampler(dataset_val_new)
 
-
         batch_sampler_train = torch.utils.data.BatchSampler(
             sampler_train, args.batch_size, drop_last=True)
 
@@ -220,11 +219,11 @@ def main(args):
                 sampler_train_balanced, args.batch_size, drop_last=True)
 
         data_loader_train = DataLoader(dataset_train, batch_sampler=batch_sampler_train,
-                                    collate_fn=utils.collate_fn, num_workers=args.num_workers,
-                                    pin_memory=True)
+                                       collate_fn=utils.collate_fn, num_workers=args.num_workers,
+                                       pin_memory=True)
         data_loader_val = DataLoader(dataset_val, args.batch_size, sampler=sampler_val,
-                                    drop_last=False, collate_fn=utils.collate_fn, num_workers=args.num_workers,
-                                    pin_memory=True)
+                                     drop_last=False, collate_fn=utils.collate_fn, num_workers=args.num_workers,
+                                     pin_memory=True)
         if phase_idx >= 1:
             data_loader_train_balanced = DataLoader(dataset_train_balanced, batch_sampler=batch_sampler_train_balanced, collate_fn=utils.collate_fn, num_workers=args.num_workers, pin_memory=True)
             data_loader_val_old = DataLoader(dataset_val_old, args.batch_size, sampler=sampler_val_old, drop_last=False, collate_fn=utils.collate_fn, num_workers=args.num_workers, pin_memory=True)
@@ -245,7 +244,7 @@ def main(args):
             {
                 "params":
                     [p for n, p in model_without_ddp.named_parameters()
-                    if not match_name_keywords(n, args.lr_backbone_names) and not match_name_keywords(n, args.lr_linear_proj_names) and p.requires_grad],
+                     if not match_name_keywords(n, args.lr_backbone_names) and not match_name_keywords(n, args.lr_linear_proj_names) and p.requires_grad],
                 "lr": args.lr,
             },
             {
@@ -264,7 +263,7 @@ def main(args):
                                         weight_decay=args.weight_decay)
         else:
             optimizer = torch.optim.AdamW(param_dicts, lr=args.lr,
-                                        weight_decay=args.weight_decay)
+                                          weight_decay=args.weight_decay)
         lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, args.lr_drop)
 
         if phase_idx >= 1:
